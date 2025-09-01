@@ -167,14 +167,17 @@ For more advanced usage using inverse/forward kinematics there are several examp
 # Project Updates & Community
 ## Updates from community
 
-Amazing Base for the amazing hand : 
+### Amazing Base for the amazing hand : 
 ![Base](assets/Base.jpg)
 STL or Step file can be found [here](https://github.com/pollen-robotics/AmazingHand/tree/main/cad) 
 
-Specific Chinese BOM available here :
+### Specific Chinese BOM available here :
 [Chinese BOM](https://docs.google.com/spreadsheets/d/1fHZiTky79vyZwICj5UGP2c_RiuLLm89K8HrB3vpb2h4/edit?gid=837395814#gid=837395814)
 
 Thanks to Jianliang Shen !
+
+### You don't want to build it by yourself ? Kits are available visiting this link : 
+https://shop.wowrobo.com/products/amazing-hand-the-open-source-robotic-hand-kit
 
 ## To Do List
 - Design small custom pcb with serial hub and power supply functions, to fit everything in the hand
