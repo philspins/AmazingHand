@@ -117,7 +117,6 @@ Note that this assembly guide is for a standalone Right hand.
 
 If you need to build a standalone Left hand, you can keep the sames IDs for servos location, and select if it's a right or left hand in the software.
 
-BUT, if you need to build both right and left hands to plug them on a robot, you will have to attribute differents IDs for right and left hands. You can't have same ID for different servos on the same serial bus...
 
 ## Run basic Demo
 
@@ -136,6 +135,15 @@ Check on the Bom List :
 
 https://github.com/user-attachments/assets/485fc1f4-cc57-4e59-90b5-e84518b9fed0
 
+## You need both right & left hands on the same bus ?
+
+If you need to build both right and left hands to plug them on a robot, you will have to attribute differents IDs for right and left hands. You can't have same ID for different servos on the same serial bus...
+Very important thing is to keep same assembly order for servos, but set them different IDs than for the right hand, as following :
+![IDs](assets/Both_Hands-IDs.jpg)
+
+Specific software is also needed, in order to drive each hand independently. You can find it 
+These simple demo runs same hand patterns on both hands simultaneously, but it's only available in python : 
+"AmazingHand_Demo_Both" [here](https://github.com/pollen-robotics/AmazingHand/tree/main/PythonExample)
 
 # Disclaimer
 
