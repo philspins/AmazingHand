@@ -141,8 +141,8 @@ If you need to build both right and left hands to plug them on a robot, you will
 Very important thing is to keep same assembly order for servos, but set them different IDs than for the right hand, as following :
 ![IDs](assets/Both_Hands-IDs.jpg)
 
-Specific software is also needed, in order to drive each hand independently. You can find it 
-These simple demo runs same hand patterns on both hands simultaneously, but it's only available in python : 
+Specific software is also needed, in order to drive each hand independently.
+This simple demo runs same hand patterns on both hands simultaneously, but it's only available in python : 
 "AmazingHand_Demo_Both" [here](https://github.com/pollen-robotics/AmazingHand/tree/main/PythonExample)
 
 # Disclaimer
