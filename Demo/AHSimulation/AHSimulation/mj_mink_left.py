@@ -27,7 +27,7 @@ class Client:
 
 
         self.model = mujoco.MjModel.from_xml_path(
-            f"{ROOT_PATH}/AHSimulation/AH_Right/mjcf/scene.xml"
+            f"{ROOT_PATH}/AHSimulation/AH_Left/mjcf/scene.xml"
         )
         # self.data=mujoco.MjData(self.model)
 
@@ -230,7 +230,7 @@ class Client:
 
                     elif event_id == "tick_ctrl":
                         if len(self.metadata)>0:
-                            self.node.send_output("mj_r_joints_pos", pa.array(self.motor_pos), self.metadata)
+                            self.node.send_output("mj_l_joints_pos", pa.array(self.motor_pos), self.metadata)
                         # self.pull_position(self.node, event["metadata"])
 
                     elif event_id == "pull_velocity":
@@ -239,9 +239,9 @@ class Client:
                         self.pull_current(self.node, event["metadata"])
                     elif event_id == "write_goal_position":
                         self.write_goal_position(event["value"])
-                    elif event_id == "r_hand_pos":
+                    elif event_id == "l_hand_pos":
                         self.write_mocap_pos(event["value"])
-                    elif event_id == "r_hand_quat":
+                    elif event_id == "l_hand_quat":
                         self.write_mocap_quat(event["value"])
 
                     elif event_id == "end":
@@ -276,13 +276,13 @@ class Client:
         #please, a method to access the mocap objects by name...
 
 
-        [x,y,z]=hand[0]['r_tip1'].values
+        [x,y,z]=hand[0]['l_tip1'].values
         self.data.mocap_pos[0]=[x.as_py()*1.5-0.025,y.as_py()*1.5+0.022,z.as_py()*1.5+0.098]
-        [x,y,z]=hand[0]['r_tip2'].values
+        [x,y,z]=hand[0]['l_tip2'].values
         self.data.mocap_pos[1]=[x.as_py()*1.5-0.025,y.as_py()*1.5-0.009,z.as_py()*1.5+0.092]
-        [x,y,z]=hand[0]['r_tip3'].values
+        [x,y,z]=hand[0]['l_tip3'].values
         self.data.mocap_pos[2]=[x.as_py()*1.5-0.025,y.as_py()*1.5-0.040,z.as_py()*1.5+0.082]
-        [x,y,z]=hand[0]['r_tip4'].values
+        [x,y,z]=hand[0]['l_tip4'].values
         self.data.mocap_pos[3]=[x.as_py()*1.5+0.024,y.as_py()*1.5+0.019,z.as_py()*1.5+0.017]
 
 
@@ -290,16 +290,16 @@ class Client:
         #please, a method to access the mocap objects by name...
 
 
-        [w,x,y,z]=hand[0]['r_tip1'].values
+        [w,x,y,z]=hand[0]['l_tip1'].values
         self.data.mocap_quat[0]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
 
-        [w,x,y,z]=hand[0]['r_tip2'].values
+        [w,x,y,z]=hand[0]['l_tip2'].values
         self.data.mocap_quat[1]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
 
-        [w,x,y,z]=hand[0]['r_tip3'].values
+        [w,x,y,z]=hand[0]['l_tip3'].values
         self.data.mocap_quat[2]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
 
-        [w,x,y,z]=hand[0]['r_tip4'].values
+        [w,x,y,z]=hand[0]['l_tip4'].values
         self.data.mocap_quat[3]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
 
 

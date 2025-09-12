@@ -22,14 +22,15 @@ def process_img(hand_proc, image):
     # Draw the hand annotations on the image.
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
-    res=None
+    r_res=None
+    l_res=None
     if results.multi_hand_landmarks:
 
       # print('Handedness:', results.multi_handedness)
       # print(results.multi_hand_world_landmarks)
 
       for index,handedness_classif in enumerate(results.multi_handedness):
-          if handedness_classif.classification[0].label=='Right' and handedness_classif.classification[0].score>0.8: #let's considere only one right hand
+          if handedness_classif.classification[0].score>0.8: #let's considere only one right hand
 
 
       # for hand_landmarks in results.multi_hand_landmarks:
@@ -49,7 +50,9 @@ def process_img(hand_proc, image):
               # hand_landmarks=results.multi_hand_landmarks[index] #normalized
               hand_landmarks_norm=results.multi_hand_landmarks[index] #normalized
 
-              #TODO rotate everything in a hand referential
+
+
+
 
               tip1_x=hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x-hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].x
               tip1_y=hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y-hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].y
@@ -89,32 +92,41 @@ def process_img(hand_proc, image):
               # unit_z=unit_z/np.linalg.norm(unit_z)
               # pinky_mcp=np.array([hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_MCP].x,hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_MCP].y,hand_landmarks.landmark[mp_hands.HandLandmark.PINKY_MCP].z])
 
-              origin=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.WRIST].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.WRIST].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.WRIST].z])
-              mid_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].z])
-              unit_z=mid_mcp-origin
+              #rotate everything in a hand referential
+              origin=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.WRIST].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.WRIST].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.WRIST].z]) #wrist base as the origin
+              mid_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].z]) #base of the middle finger
+              unit_z=mid_mcp-origin #z is unit vector from base of wrist toward base of middle finger
               unit_z=unit_z/np.linalg.norm(unit_z)
-              pinky_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].z])
+              pinky_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].z]) #base of the pinky finger
+
+              index_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].z]) #base of the index finger
+
 
               # print(f"ORIGIN: {origin} MID: {mid_mcp}")
-              vec_towards_y=pinky_mcp-origin
-              # unit_x=np.cross(unit_z,vec_towards_y)
-              unit_x=np.cross(vec_towards_y,unit_z)
 
+              if handedness_classif.classification[0].label=='Right':
+                  vec_towards_y=pinky_mcp-origin #vector from wrist base towards pinky base
+              if handedness_classif.classification[0].label=='Left':
+                  vec_towards_y=index_mcp-origin #vector from wrist base towards pinky base
+              # unit_x=np.cross(unit_z,vec_towards_y)
+
+              unit_x=np.cross(vec_towards_y,unit_z) #we say unit x is the cross product of z and the vector towards pinky
 
               unit_x=unit_x/np.linalg.norm(unit_x)
+
               unit_y=np.cross(unit_z,unit_x)
               # unit_y=np.cross(unit_x,unit_z)
 
+
+
+
+
+
               # A=np.array([unit_x,unit_y,unit_z]).reshape((3,3))
+
               R=np.array([unit_x,-unit_y,unit_z]).reshape((3,3)) #-y because of mirror?
 
 
-              # tip1=np.array([tip1_x,tip1_y,tip1_z]).dot(R)
-              # tip2=np.array([tip2_x,tip2_y,tip2_z]).dot(R)
-              # tip3=np.array([tip3_x,tip3_y,tip3_z]).dot(R)
-              # tip4=np.array([tip4_x,tip4_y,tip4_z]).dot(R)
-
-              # tip1=np.array([tip1_x,tip1_y,tip1_z]).dot(R)
               tip1=R@np.array([tip1_x,tip1_y,tip1_z])
               tip2=R@np.array([tip2_x,tip2_y,tip2_z])
               tip3=R@np.array([tip3_x,tip3_y,tip3_z])
@@ -124,9 +136,12 @@ def process_img(hand_proc, image):
               # image = cv2.drawFrameAxes(image, K, disto, rotV, origin, scale)
 
               # res=[{'r_tip1': [tip1_x,tip1_y,tip1_z],'r_tip2': [tip2_x,tip2_y,tip2_z],'r_tip3': [tip3_x,tip3_y,tip3_z],'r_tip4': [tip4_x,tip4_y,tip4_z]}]
-              res=[{'r_tip1': tip1,'r_tip2': tip2,'r_tip3': tip3,'r_tip4': tip4}]
+              if handedness_classif.classification[0].label=='Right':
+                  r_res=[{'r_tip1': tip1,'r_tip2': tip2,'r_tip3': tip3,'r_tip4': tip4}]
+              elif handedness_classif.classification[0].label=='Left':
+                  l_res=[{'l_tip1': tip1,'l_tip2': tip2,'l_tip3': tip3,'l_tip4': tip4}]
     # Flip the image horizontally for a selfie-view display.
-    return image,res
+    return image,r_res,l_res
 # cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
 
 
@@ -160,10 +175,12 @@ def main():
 
                     frame = cv2.flip(frame, 1)
                     #process
-                    frame,res=process_img(hands,frame)
+                    frame,r_res,l_res=process_img(hands,frame)
 
-                    if res is not None:
-                        node.send_output('hand_pos',pa.array(res))
+                    if r_res is not None:
+                        node.send_output('r_hand_pos',pa.array(r_res))
+                    if l_res is not None:
+                        node.send_output('l_hand_pos',pa.array(l_res))
                     # cv2.imshow('MediaPipe Hands', cv2.flip(frame, 1))
                     cv2.imshow('MediaPipe Hands', frame)
                     if cv2.waitKey(1) & 0xFF == ord("q"):
