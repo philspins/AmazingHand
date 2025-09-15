@@ -189,8 +189,7 @@ class Client:
                         # mujoco.mj_step(self.model, self.data)
 
 
-                        #get the motors position and send
-
+                        #get the motors position and send for real motor control
 
                         f1_motor1=mujoco.mj_name2id(self.model,mujoco.mjtObj.mjOBJ_JOINT,"finger1_motor1")
                         f1_motor2=mujoco.mj_name2id(self.model,mujoco.mjtObj.mjOBJ_JOINT,"finger1_motor2")
@@ -202,16 +201,16 @@ class Client:
                         f4_motor2=mujoco.mj_name2id(self.model,mujoco.mjtObj.mjOBJ_JOINT,"finger4_motor2")
                         # print(f"motor1: {self.data.joint(f1_motor1).qpos} motor2: {self.data.joint(f1_motor2).qpos}")
                         self.metadata=event["metadata"]
-                        self.metadata["finger1"]=[0,1]
-                        self.metadata["finger2"]=[2,3]
-                        self.metadata["finger3"]=[4,5]
-                        self.metadata["finger4"]=[6,7]
+                        self.metadata["r_finger1"]=[0,1]
+                        self.metadata["r_finger2"]=[2,3]
+                        self.metadata["r_finger3"]=[4,5]
+                        self.metadata["r_finger4"]=[6,7]
 
                         self.motor_pos=np.zeros(8);
-                        self.motor_pos[self.metadata["finger1"]]=np.array([self.data.joint(f1_motor1).qpos[0],self.data.joint(f1_motor2).qpos[0]])
-                        self.motor_pos[self.metadata["finger2"]]=np.array([self.data.joint(f2_motor1).qpos[0],self.data.joint(f2_motor2).qpos[0]])
-                        self.motor_pos[self.metadata["finger3"]]=np.array([self.data.joint(f3_motor1).qpos[0],self.data.joint(f3_motor2).qpos[0]])
-                        self.motor_pos[self.metadata["finger4"]]=np.array([self.data.joint(f4_motor1).qpos[0],self.data.joint(f4_motor2).qpos[0]])
+                        self.motor_pos[self.metadata["r_finger1"]]=np.array([self.data.joint(f1_motor1).qpos[0],self.data.joint(f1_motor2).qpos[0]])
+                        self.motor_pos[self.metadata["r_finger2"]]=np.array([self.data.joint(f2_motor1).qpos[0],self.data.joint(f2_motor2).qpos[0]])
+                        self.motor_pos[self.metadata["r_finger3"]]=np.array([self.data.joint(f3_motor1).qpos[0],self.data.joint(f3_motor2).qpos[0]])
+                        self.motor_pos[self.metadata["r_finger4"]]=np.array([self.data.joint(f4_motor1).qpos[0],self.data.joint(f4_motor2).qpos[0]])
 
 
 

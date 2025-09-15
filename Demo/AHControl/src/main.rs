@@ -111,7 +111,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     while let Some(event) = events.recv() {
         match event {
             Event::Input { id, metadata, data } => match id.as_str() {
-                "mj_joints_pos" => {
+                "mj_l_joints_pos" | "mj_r_joints_pos" => {
                     let buffer: &dora_node_api::arrow::array::Float64Array =
                         data.as_any().downcast_ref().unwrap();
                     let buffer: &[f64] = buffer.values();
@@ -127,7 +127,8 @@ fn main() -> Result<(), Box<dyn Error>> {
                             metadata.parameters.get(&finger.finger_name)
                         {
                             println!(
-                                "metadata: {:?} data: {:?} {:?}",
+                                "metadata: name: {:?} idx {:?} data: {:?} {:?}",
+                                finger.finger_name,
                                 finger1_idx,
                                 buffer[finger1_idx[0] as usize],
                                 buffer[finger1_idx[1] as usize]

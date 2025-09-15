@@ -13,12 +13,13 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
 
+# https://mediapipe.readthedocs.io/en/latest/solutions/hands.html
 
 def process_img(hand_proc, image):
     image.flags.writeable = False
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     results = hand_proc.process(image)
-
+    # img_width,img_height,_ =image.shape
     # Draw the hand annotations on the image.
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -71,6 +72,26 @@ def process_img(hand_proc, image):
               tip4_z=hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_TIP].z-hand_landmarks.landmark[mp_hands.HandLandmark.THUMB_MCP].z
 
 
+              # tip1_x=hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x-hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].x
+              # tip1_y=hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y-hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].y
+              # tip1_z=hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].z-hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].z
+
+              # tip2_x=hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].x-hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].x
+              # tip2_y=hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].y-hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].y
+              # tip2_z=hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_TIP].z-hand_landmarks_norm.landmark[mp_hands.HandLandmark.MIDDLE_FINGER_MCP].z
+
+              # tip3_x=hand_landmarks_norm.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].x-hand_landmarks_norm.landmark[mp_hands.HandLandmark.RING_FINGER_MCP].x
+              # tip3_y=hand_landmarks_norm.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].y-hand_landmarks_norm.landmark[mp_hands.HandLandmark.RING_FINGER_MCP].y
+              # tip3_z=hand_landmarks_norm.landmark[mp_hands.HandLandmark.RING_FINGER_TIP].z-hand_landmarks_norm.landmark[mp_hands.HandLandmark.RING_FINGER_MCP].z
+
+              # tip4_x=hand_landmarks_norm.landmark[mp_hands.HandLandmark.THUMB_TIP].x-hand_landmarks_norm.landmark[mp_hands.HandLandmark.THUMB_MCP].x
+              # tip4_y=hand_landmarks_norm.landmark[mp_hands.HandLandmark.THUMB_TIP].y-hand_landmarks_norm.landmark[mp_hands.HandLandmark.THUMB_MCP].y
+              # tip4_z=hand_landmarks_norm.landmark[mp_hands.HandLandmark.THUMB_TIP].z-hand_landmarks_norm.landmark[mp_hands.HandLandmark.THUMB_MCP].z
+
+
+
+
+
               # tip1_x=hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].x
               # tip1_y=hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].y
               # tip1_z=hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP].z
@@ -99,16 +120,17 @@ def process_img(hand_proc, image):
               unit_z=unit_z/np.linalg.norm(unit_z)
               pinky_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].z]) #base of the pinky finger
 
-              index_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].z]) #base of the index finger
+              # index_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].z]) #base of the index finger
 
 
               # print(f"ORIGIN: {origin} MID: {mid_mcp}")
 
-              if handedness_classif.classification[0].label=='Right':
-                  vec_towards_y=pinky_mcp-origin #vector from wrist base towards pinky base
-              if handedness_classif.classification[0].label=='Left':
-                  vec_towards_y=index_mcp-origin #vector from wrist base towards pinky base
+              # if handedness_classif.classification[0].label=='Right':
+              #     vec_towards_y=pinky_mcp-origin #vector from wrist base towards pinky base
+              # if handedness_classif.classification[0].label=='Left':
+              #     vec_towards_y=index_mcp-origin #vector from wrist base towards pinky base
               # unit_x=np.cross(unit_z,vec_towards_y)
+              vec_towards_y=pinky_mcp-origin #vector from wrist base towards pinky base
 
               unit_x=np.cross(vec_towards_y,unit_z) #we say unit x is the cross product of z and the vector towards pinky
 
@@ -123,9 +145,7 @@ def process_img(hand_proc, image):
 
 
               # A=np.array([unit_x,unit_y,unit_z]).reshape((3,3))
-
               R=np.array([unit_x,-unit_y,unit_z]).reshape((3,3)) #-y because of mirror?
-
 
               tip1=R@np.array([tip1_x,tip1_y,tip1_z])
               tip2=R@np.array([tip2_x,tip2_y,tip2_z])
@@ -138,8 +158,10 @@ def process_img(hand_proc, image):
               # res=[{'r_tip1': [tip1_x,tip1_y,tip1_z],'r_tip2': [tip2_x,tip2_y,tip2_z],'r_tip3': [tip3_x,tip3_y,tip3_z],'r_tip4': [tip4_x,tip4_y,tip4_z]}]
               if handedness_classif.classification[0].label=='Right':
                   r_res=[{'r_tip1': tip1,'r_tip2': tip2,'r_tip3': tip3,'r_tip4': tip4}]
+                  # print(f"RIGHT: {tip1_x:.3f} {tip1_y:.3f} {tip1_z:.3f} => {tip1}. {unit_x} {unit_y} {unit_z}")
               elif handedness_classif.classification[0].label=='Left':
                   l_res=[{'l_tip1': tip1,'l_tip2': tip2,'l_tip3': tip3,'l_tip4': tip4}]
+                  # print(f"LEFT: {tip1_x:.3f} {tip1_y:.3f} {tip1_z:.3f} => {tip1}. {unit_x} {unit_y} {unit_z}")
     # Flip the image horizontally for a selfie-view display.
     return image,r_res,l_res
 # cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))

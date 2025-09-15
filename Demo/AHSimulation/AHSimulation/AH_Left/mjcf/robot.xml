@@ -53,7 +53,7 @@
   </default>
   <worldbody>
     <!-- Link l_wrist_interface -->
-    <body name="l_wrist_interface" pos="0 0 0" quat="1 0 0 0" childclass="mjcf">
+    <body name="l_wrist_interface" pos="0 0 0" quat="0 0 0 1" childclass="mjcf">
       <inertial pos="0 0 0" mass="1e-09" fullinertia="1e-09 1e-09 1e-09 0 0 0"/>
       <!-- Part scs0009 -->
       <geom type="mesh" class="visual" pos="-0.022075 -0.01845 0.0698" quat="0.707107 -3.06725e-14 3.11973e-14 0.707107" mesh="scs0009" material="scs0009_material"/>
