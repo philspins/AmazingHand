@@ -275,32 +275,35 @@ class Client:
 
         #please, a method to access the mocap objects by name...
 
-
-        [x,y,z]=hand[0]['l_tip1'].values
-        self.data.mocap_pos[0]=[x.as_py()*1.5+0.025,y.as_py()*1.5+0.022,z.as_py()*1.5+0.098]
-        [x,y,z]=hand[0]['l_tip2'].values
-        self.data.mocap_pos[1]=[x.as_py()*1.5+0.025,y.as_py()*1.5-0.009,z.as_py()*1.5+0.092]
-        [x,y,z]=hand[0]['l_tip3'].values
-        self.data.mocap_pos[2]=[x.as_py()*1.5+0.025,y.as_py()*1.5-0.040,z.as_py()*1.5+0.082]
-        [x,y,z]=hand[0]['l_tip4'].values
-        self.data.mocap_pos[3]=[x.as_py()*1.5-0.024,y.as_py()*1.5+0.019,z.as_py()*1.5+0.017]
+        if "l_tip1" in hand[0]:
+            [x,y,z]=hand[0]['l_tip1'].values
+            self.data.mocap_pos[0]=[x.as_py()*1.5+0.025,y.as_py()*1.5+0.022,z.as_py()*1.5+0.098]
+        if "l_tip2" in hand[0]:
+            [x,y,z]=hand[0]['l_tip2'].values
+            self.data.mocap_pos[1]=[x.as_py()*1.5+0.025,y.as_py()*1.5-0.009,z.as_py()*1.5+0.092]
+        if "l_tip3" in hand[0]:
+            [x,y,z]=hand[0]['l_tip3'].values
+            self.data.mocap_pos[2]=[x.as_py()*1.5+0.025,y.as_py()*1.5-0.040,z.as_py()*1.5+0.082]
+        if "l_tip4" in hand[0]:
+            [x,y,z]=hand[0]['l_tip4'].values
+            self.data.mocap_pos[3]=[x.as_py()*1.5-0.024,y.as_py()*1.5+0.019,z.as_py()*1.5+0.017]
 
 
     def write_mocap_quat(self, hand):
         #please, a method to access the mocap objects by name...
 
-
-        [w,x,y,z]=hand[0]['l_tip1'].values
-        self.data.mocap_quat[0]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
-
-        [w,x,y,z]=hand[0]['l_tip2'].values
-        self.data.mocap_quat[1]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
-
-        [w,x,y,z]=hand[0]['l_tip3'].values
-        self.data.mocap_quat[2]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
-
-        [w,x,y,z]=hand[0]['l_tip4'].values
-        self.data.mocap_quat[3]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
+        if "l_tip1" in hand[0]:
+            [w,x,y,z]=hand[0]['l_tip1'].values
+            self.data.mocap_quat[0]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
+        if "l_tip2" in hand[0]:
+            [w,x,y,z]=hand[0]['l_tip2'].values
+            self.data.mocap_quat[1]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
+        if "l_tip3" in hand[0]:
+            [w,x,y,z]=hand[0]['l_tip3'].values
+            self.data.mocap_quat[2]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
+        if "l_tip4" in hand[0]:
+            [w,x,y,z]=hand[0]['l_tip4'].values
+            self.data.mocap_quat[3]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
 
 
 
