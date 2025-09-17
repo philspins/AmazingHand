@@ -120,17 +120,17 @@ def process_img(hand_proc, image):
               unit_z=unit_z/np.linalg.norm(unit_z)
               pinky_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.PINKY_MCP].z]) #base of the pinky finger
 
-              # index_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].z]) #base of the index finger
+              index_mcp=np.array([hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].x,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].y,hand_landmarks_norm.landmark[mp_hands.HandLandmark.INDEX_FINGER_MCP].z]) #base of the index finger
 
 
               # print(f"ORIGIN: {origin} MID: {mid_mcp}")
 
-              # if handedness_classif.classification[0].label=='Right':
-              #     vec_towards_y=pinky_mcp-origin #vector from wrist base towards pinky base
-              # if handedness_classif.classification[0].label=='Left':
-              #     vec_towards_y=index_mcp-origin #vector from wrist base towards pinky base
+              if handedness_classif.classification[0].label=='Right':
+                  vec_towards_y=pinky_mcp-origin #vector from wrist base towards pinky base
+              if handedness_classif.classification[0].label=='Left':
+                  vec_towards_y=index_mcp-origin #vector from wrist base towards pinky base
               # unit_x=np.cross(unit_z,vec_towards_y)
-              vec_towards_y=pinky_mcp-origin #vector from wrist base towards pinky base
+              # vec_towards_y=pinky_mcp-origin #vector from wrist base towards pinky base
 
               unit_x=np.cross(vec_towards_y,unit_z) #we say unit x is the cross product of z and the vector towards pinky
 
@@ -143,10 +143,11 @@ def process_img(hand_proc, image):
 
 
 
-
+              if handedness_classif.classification[0].label=='Right':
               # A=np.array([unit_x,unit_y,unit_z]).reshape((3,3))
-              R=np.array([unit_x,-unit_y,unit_z]).reshape((3,3)) #-y because of mirror?
-
+                  R=np.array([unit_x,-unit_y,unit_z]).reshape((3,3)) #-y because of mirror?
+              if handedness_classif.classification[0].label=='Left':
+                  R=np.array([unit_x,-unit_y,unit_z]).reshape((3,3)) #-y because of mirror?
               tip1=R@np.array([tip1_x,tip1_y,tip1_z])
               tip2=R@np.array([tip2_x,tip2_y,tip2_z])
               tip3=R@np.array([tip3_x,tip3_y,tip3_z])

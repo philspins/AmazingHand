@@ -25,11 +25,11 @@ def main():
                 elapsed=time.time()-t0
                 s1_pitch=np.sin(2.0*np.pi*1.0*elapsed)*np.radians(10.0)+np.radians(10.0)
                 rs1_roll=np.cos(2.0*np.pi*1.0*elapsed)*np.radians(10.0)
-                ls1_roll=np.cos(2.0*np.pi*1.0*elapsed)*np.radians(10.0)
+                ls1_roll=np.cos(2.0*np.pi*1.0*elapsed)*np.radians(-10.0)
 
                 s2_pitch=np.sin(2.0*np.pi*1.0*elapsed)*np.radians(140.0/2.0)+np.radians(140.0/2.0)
                 s4_pitch=np.sin(2.0*np.pi*1.0*elapsed)*np.radians((90.0+53.0)/2.0)+np.radians((90.0-53.0)/2.0)
-                ls4_pitch=np.sin(2.0*np.pi*1.0*elapsed)*np.radians((90.0+53.0)/2.0)-np.radians((90.0-53.0)/2.0)
+
 
                 #motors 0° => ~121.9° pitch of the distal phalange in the finger base referential
                 #flexion range (distal phalange) [0°, 140°]
@@ -38,7 +38,7 @@ def main():
                 rtip1=Rotation.from_euler('XYZ',[rs1_roll,s1_pitch,0.0])
                 rtip1=rtip1.as_quat(scalar_first=True)
 
-                ltip1=Rotation.from_euler('XYZ',[ls1_roll,-s1_pitch,np.radians(180)])
+                ltip1=Rotation.from_euler('XYZ',[ls1_roll,s1_pitch,0.0])
                 ltip1=ltip1.as_quat(scalar_first=True)
 
 
@@ -46,7 +46,7 @@ def main():
                 rtip2=Rotation.from_euler('XYZ',[np.radians(10.0),s2_pitch,0.0]) #finger2 has a 10° roll offset
                 rtip2=rtip2.as_quat(scalar_first=True)
 
-                ltip2=Rotation.from_euler('XYZ',[np.radians(10.0),-s2_pitch,np.radians(180)]) #finger2 has a 10° roll offset
+                ltip2=Rotation.from_euler('XYZ',[np.radians(-10.0),s2_pitch,0.0]) #finger2 has a 10° roll offset
                 ltip2=ltip2.as_quat(scalar_first=True)
 
 
@@ -55,7 +55,7 @@ def main():
                 rtip3=Rotation.from_euler('XYZ',[np.radians(20.0),s2_pitch,0.0]) #finger3 has a 20° roll offset
                 rtip3=rtip3.as_quat(scalar_first=True)
 
-                ltip3=Rotation.from_euler('XYZ',[np.radians(20.0),-s2_pitch,np.radians(180)]) #finger3 has a 20° roll offset
+                ltip3=Rotation.from_euler('XYZ',[np.radians(-20.0),s2_pitch,0.0]) #finger3 has a 20° roll offset
                 ltip3=ltip3.as_quat(scalar_first=True)
 
 
@@ -63,7 +63,7 @@ def main():
                 rtip4=Rotation.from_euler('xyz',[0.0,-s4_pitch,np.radians(20.0)]) #finger4 has a 20° yaw offset
                 rtip4=rtip4.as_quat(scalar_first=True)
 
-                ltip4=Rotation.from_euler('xyz',[0.0,-ls4_pitch,np.radians(-20.0+180)]) #finger4 has a 20° yaw offset
+                ltip4=Rotation.from_euler('xyz',[0.0,-s4_pitch,np.radians(-20.0)]) #finger4 has a 20° yaw offset
                 ltip4=ltip4.as_quat(scalar_first=True)
 
 
