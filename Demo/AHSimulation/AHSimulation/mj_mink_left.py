@@ -27,7 +27,7 @@ class Client:
 
 
         self.model = mujoco.MjModel.from_xml_path(
-            f"{ROOT_PATH}/AHSimulation/AH_Right/mjcf/scene.xml"
+            f"{ROOT_PATH}/AHSimulation/AH_Left/mjcf/scene.xml"
         )
         # self.data=mujoco.MjData(self.model)
 
@@ -189,7 +189,8 @@ class Client:
                         # mujoco.mj_step(self.model, self.data)
 
 
-                        #get the motors position and send for real motor control
+                        #get the motors position and send
+
 
                         f1_motor1=mujoco.mj_name2id(self.model,mujoco.mjtObj.mjOBJ_JOINT,"finger1_motor1")
                         f1_motor2=mujoco.mj_name2id(self.model,mujoco.mjtObj.mjOBJ_JOINT,"finger1_motor2")
@@ -201,16 +202,16 @@ class Client:
                         f4_motor2=mujoco.mj_name2id(self.model,mujoco.mjtObj.mjOBJ_JOINT,"finger4_motor2")
                         # print(f"motor1: {self.data.joint(f1_motor1).qpos} motor2: {self.data.joint(f1_motor2).qpos}")
                         self.metadata=event["metadata"]
-                        self.metadata["r_finger1"]=[0,1]
-                        self.metadata["r_finger2"]=[2,3]
-                        self.metadata["r_finger3"]=[4,5]
-                        self.metadata["r_finger4"]=[6,7]
+                        self.metadata["l_finger1"]=[0,1]
+                        self.metadata["l_finger2"]=[2,3]
+                        self.metadata["l_finger3"]=[4,5]
+                        self.metadata["l_finger4"]=[6,7]
 
                         self.motor_pos=np.zeros(8);
-                        self.motor_pos[self.metadata["r_finger1"]]=np.array([self.data.joint(f1_motor1).qpos[0],self.data.joint(f1_motor2).qpos[0]])
-                        self.motor_pos[self.metadata["r_finger2"]]=np.array([self.data.joint(f2_motor1).qpos[0],self.data.joint(f2_motor2).qpos[0]])
-                        self.motor_pos[self.metadata["r_finger3"]]=np.array([self.data.joint(f3_motor1).qpos[0],self.data.joint(f3_motor2).qpos[0]])
-                        self.motor_pos[self.metadata["r_finger4"]]=np.array([self.data.joint(f4_motor1).qpos[0],self.data.joint(f4_motor2).qpos[0]])
+                        self.motor_pos[self.metadata["l_finger1"]]=np.array([self.data.joint(f1_motor1).qpos[0],self.data.joint(f1_motor2).qpos[0]])
+                        self.motor_pos[self.metadata["l_finger2"]]=np.array([self.data.joint(f2_motor1).qpos[0],self.data.joint(f2_motor2).qpos[0]])
+                        self.motor_pos[self.metadata["l_finger3"]]=np.array([self.data.joint(f3_motor1).qpos[0],self.data.joint(f3_motor2).qpos[0]])
+                        self.motor_pos[self.metadata["l_finger4"]]=np.array([self.data.joint(f4_motor1).qpos[0],self.data.joint(f4_motor2).qpos[0]])
 
 
 
@@ -229,7 +230,7 @@ class Client:
 
                     elif event_id == "tick_ctrl":
                         if len(self.metadata)>0:
-                            self.node.send_output("mj_r_joints_pos", pa.array(self.motor_pos), self.metadata)
+                            self.node.send_output("mj_l_joints_pos", pa.array(self.motor_pos), self.metadata)
                         # self.pull_position(self.node, event["metadata"])
 
                     elif event_id == "pull_velocity":
@@ -238,9 +239,9 @@ class Client:
                         self.pull_current(self.node, event["metadata"])
                     elif event_id == "write_goal_position":
                         self.write_goal_position(event["value"])
-                    elif event_id == "r_hand_pos":
+                    elif event_id == "l_hand_pos":
                         self.write_mocap_pos(event["value"])
-                    elif event_id == "r_hand_quat":
+                    elif event_id == "l_hand_quat":
                         self.write_mocap_quat(event["value"])
 
                     elif event_id == "end":
@@ -274,34 +275,34 @@ class Client:
 
         #please, a method to access the mocap objects by name...
 
-        if "r_tip1" in hand[0]:
-            [x,y,z]=hand[0]['r_tip1'].values
-            self.data.mocap_pos[0]=[x.as_py()*1.5-0.025,y.as_py()*1.5+0.022,z.as_py()*1.5+0.098]
-        if "r_tip2" in hand[0]:
-            [x,y,z]=hand[0]['r_tip2'].values
-            self.data.mocap_pos[1]=[x.as_py()*1.5-0.025,y.as_py()*1.5-0.009,z.as_py()*1.5+0.092]
-        if "r_tip3" in hand[0]:
-            [x,y,z]=hand[0]['r_tip3'].values
-            self.data.mocap_pos[2]=[x.as_py()*1.5-0.025,y.as_py()*1.5-0.040,z.as_py()*1.5+0.082]
-        if "r_tip4" in hand[0]:
-            [x,y,z]=hand[0]['r_tip4'].values
-            self.data.mocap_pos[3]=[x.as_py()*1.5+0.024,y.as_py()*1.5+0.019,z.as_py()*1.5+0.017]
+        if "l_tip1" in hand[0]:
+            [x,y,z]=hand[0]['l_tip1'].values
+            self.data.mocap_pos[0]=[x.as_py()*1.5+0.025,y.as_py()*1.5-0.022,z.as_py()*1.5+0.098]
+        if "l_tip2" in hand[0]:
+            [x,y,z]=hand[0]['l_tip2'].values
+            self.data.mocap_pos[1]=[x.as_py()*1.5+0.025,y.as_py()*1.5+0.009,z.as_py()*1.5+0.092]
+        if "l_tip3" in hand[0]:
+            [x,y,z]=hand[0]['l_tip3'].values
+            self.data.mocap_pos[2]=[x.as_py()*1.5+0.025,y.as_py()*1.5+0.040,z.as_py()*1.5+0.082]
+        if "l_tip4" in hand[0]:
+            [x,y,z]=hand[0]['l_tip4'].values
+            self.data.mocap_pos[3]=[x.as_py()*1.5+0.024,y.as_py()*1.5-0.019,z.as_py()*1.5+0.017]
 
 
     def write_mocap_quat(self, hand):
         #please, a method to access the mocap objects by name...
 
-        if "r_tip1" in hand[0]:
-            [w,x,y,z]=hand[0]['r_tip1'].values
+        if "l_tip1" in hand[0]:
+            [w,x,y,z]=hand[0]['l_tip1'].values
             self.data.mocap_quat[0]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
-        if "r_tip2" in hand[0]:
-            [w,x,y,z]=hand[0]['r_tip2'].values
+        if "l_tip2" in hand[0]:
+            [w,x,y,z]=hand[0]['l_tip2'].values
             self.data.mocap_quat[1]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
-        if "r_tip3" in hand[0]:
-            [w,x,y,z]=hand[0]['r_tip3'].values
+        if "l_tip3" in hand[0]:
+            [w,x,y,z]=hand[0]['l_tip3'].values
             self.data.mocap_quat[2]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
-        if "r_tip4" in hand[0]:
-            [w,x,y,z]=hand[0]['r_tip4'].values
+        if "l_tip4" in hand[0]:
+            [w,x,y,z]=hand[0]['l_tip4'].values
             self.data.mocap_quat[3]=[w.as_py(),x.as_py(),y.as_py(),z.as_py()]
 
 

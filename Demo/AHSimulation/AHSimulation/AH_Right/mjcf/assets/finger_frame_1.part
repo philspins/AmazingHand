@@ -1,13 +1,13 @@
 {
     "configuration": "default",
-    "documentId": "fb0923073e8e7a4d8f326f1d",
-    "documentMicroversion": "f20e7a570c60dcd183af291e",
-    "elementId": "76c9a4cb65b755408c0d06da",
+    "documentId": "430ff184cf3dd9557aaff2be",
+    "documentMicroversion": "d5d04b016fa20847e87454e6",
+    "elementId": "bd399bf1860732c6c6a2ee45",
     "fullConfiguration": "default",
     "id": "MyQirKJjjvf0p1TMb",
     "isStandardContent": false,
     "name": "Finger_Frame-1 <4>",
-    "partId": "RzBD",
+    "partId": "R3BD",
     "suppressed": false,
     "type": "Part"
 }

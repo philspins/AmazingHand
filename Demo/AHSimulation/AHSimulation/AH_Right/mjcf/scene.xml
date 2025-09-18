@@ -21,19 +21,19 @@
         <light pos="0 0 3.5" dir="0 0 -1" directional="true" />
         <geom name="floor" size="0 0 0.05" pos="0 0 0" type="plane" material="groundplane" />
 
-        <body name="finger1_target" pos="0.044124 0.02289 .1641" quat="8.74095045e-01 -6.36933342e-04  4.85754384e-01 -3.53958262e-04" mocap="true">
+        <body name="finger1_target" pos="0.04838594 0.02402413 0.15888899" quat="0.84454864 -0.00166928  0.5354752  -0.001058" mocap="true">
           <geom type="sphere" size=".01" contype="0" conaffinity="0" rgba="1 0. 0. .2"/>
         </body>
 
-        <body name="finger2_target" pos="0.044124 -0.019192 0.157503" quat="0.87144989 0.06794722 0.4842855  0.03775989" mocap="true">
+        <body name="finger2_target" pos="0.04838594 -0.01469891  0.15248302" quat="0.84347869 0.04253325 0.53479657 0.02696767" mocap="true">
           <geom type="sphere" size=".01" contype="0" conaffinity="0" rgba="1 0. 0. .2"/>
         </body>
 
-        <body name="finger3_target" pos="0.044124 -0.062256 0.143951" quat="0.8622165  0.14364159 0.47914304 0.07982319" mocap="true">
+        <body name="finger3_target" pos="0.04838595 -0.05419646  0.14015328" quat="0.83889051 0.09760792 0.53188857 0.06188659" mocap="true">
           <geom type="sphere" size=".01" contype="0" conaffinity="0" rgba="1 0. 0. .2"/>
         </body>
 
-        <body name="finger4_target" pos="0.086117 0.044181 0.085324" quat="0.94705296 -0.04749806  0.27052938  0.16627835" mocap="true">
+        <body name="finger4_target" pos="0.08118535 0.04433619 0.08958578" quat="0.96133341 -0.03752578  0.21530506  0.16755184" mocap="true">
           <geom type="sphere" size=".01" contype="0" conaffinity="0" rgba="1 0. 0. .2"/>
         </body>
 
