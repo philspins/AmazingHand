@@ -26,9 +26,9 @@ class Client:
         """TODO: Add docstring."""
 
 
-        self.model = mujoco.MjModel.from_xml_path(
-            f"{ROOT_PATH}/AHSimulation/AH_Right/mjcf/scene.xml"
-        )
+        # self.model = mujoco.MjModel.from_xml_path(f"{ROOT_PATH}/AHSimulation/AH_Right/mjcf/scene.xml")
+        # self.model = mujoco.MjModel.from_xml_path(f"/mnt/c/Users/phill/dev/AmazingHand/Demo/AHSimulation/AHSimulation/AH_Right/mjcf/scene.xml")
+        self.model = mujoco.MjModel.from_xml_path(f"C:\\Users/phill/dev/AmazingHand/Demo/AHSimulation/AHSimulation/AH_Right/mjcf/scene.xml")
         # self.data=mujoco.MjData(self.model)
 
 
