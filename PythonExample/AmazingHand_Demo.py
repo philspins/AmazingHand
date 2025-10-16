@@ -27,52 +27,55 @@ def main():
     c.write_torque_enable(1, 1)  #1 = On / 2 = Off / 3 = Free
     t0 = time.time()
 
-    t = time.time() - t0
-
-    OpenHand()
-    time.sleep(0.5)
-
-    CloseHand()
-    time.sleep(3)
-
-    OpenHand_Progressive()
-    time.sleep(0.5)
-
-    SpreadHand()
-    time.sleep(0.6)
-    ClenchHand()
-    time.sleep(0.6)
-
-    OpenHand()
-    time.sleep(0.2)
-
-    Index_Pointing()
-    time.sleep(0.4)
-    Nonono()
-    time.sleep(0.5)
     
-    OpenHand()
-    time.sleep(0.3)
+    while True:
 
-    Perfect()
-    time.sleep(0.8)
+        t = time.time() - t0
 
-    OpenHand()
-    time.sleep(0.4)
+        OpenHand()
+        time.sleep(0.5)
 
-    Victory()
-    time.sleep(1)
-    Scissors()
-    time.sleep(0.5)
+        CloseHand()
+        time.sleep(3)
 
-    OpenHand()
-    time.sleep(0.4)
+        OpenHand_Progressive()
+        time.sleep(0.5)
 
-    Pinched()
-    time.sleep(1)
+        SpreadHand()
+        time.sleep(0.6)
+        ClenchHand()
+        time.sleep(0.6)
 
-    Fuck()
-    time.sleep(0.8)
+        OpenHand()
+        time.sleep(0.2)
+
+        Index_Pointing()
+        time.sleep(0.4)
+        Nonono()
+        time.sleep(0.5)
+        
+        OpenHand()
+        time.sleep(0.3)
+
+        Perfect()
+        time.sleep(0.8)
+
+        OpenHand()
+        time.sleep(0.4)
+
+        Victory()
+        time.sleep(1)
+        Scissors()
+        time.sleep(0.5)
+
+        OpenHand()
+        time.sleep(0.4)
+
+        Pinched()
+        time.sleep(1)
+
+        Fuck()
+        time.sleep(0.8)
 
 
     #trials
