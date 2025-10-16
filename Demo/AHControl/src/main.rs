@@ -50,7 +50,7 @@ struct Motor {
 #[command(author, version, about, long_about = None)]
 struct Args {
     /// Serialport
-    #[arg(short, long, default_value = "/dev/ttyACM0")]
+    #[arg(short, long, default_value = "COM6")]
     serialport: String,
     /// baudrate
     #[arg(short, long, default_value_t = 1_000_000)]
