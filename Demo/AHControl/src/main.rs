@@ -1,6 +1,5 @@
-use clap::Parser;
+use clap::{Parser, ValueEnum};
 // use dora_node_api::{dora_core::config::NodeId, DoraNode, Event};
-
 // use dora_node_api::IntoArrow;
 use dora_node_api::{self, arrow::array::Array, DoraNode, Event, Parameter};
 use eyre::{eyre, Result};
@@ -8,13 +7,6 @@ use rustypot::servo;
 use std::{error::Error, time::Duration};
 
 use facet::Facet;
-use facet_pretty::FacetPretty;
-// use std::{collections::HashMap, path::PathBuf, sync::Arc};
-// use std::error::Error;
-// use arrow_convert::{
-//     deserialize::TryIntoCollection, serialize::TryIntoArrow, ArrowDeserialize, ArrowField,
-//     ArrowSerialize,
-// };
 use std::{fs, thread};
 
 // use std::io::Read;
@@ -50,14 +42,22 @@ struct Motor {
 #[command(author, version, about, long_about = None)]
 struct Args {
     /// Serialport
-    #[arg(short, long, default_value = "COM6")]
+    #[arg(short, long, default_value = "COM8")]
     serialport: String,
+
     /// baudrate
     #[arg(short, long, default_value_t = 1_000_000)]
     baudrate: u32,
+
     /// TOML config file
     #[arg(short, long, default_value = "config/r_hand.toml")]
     config: String,
+}
+
+#[derive(ValueEnum, Clone, Debug)]
+enum ProtocolVersion {
+    V1,
+    V2,
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
@@ -67,11 +67,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     let configfile: String = args.config;
     println!("Opening {:?}", configfile);
     let toml_str = fs::read_to_string(configfile).expect("Failed to read config file");
-
+    
     let motors_conf: Fingers =
         facet_toml::from_str(&toml_str).expect("Failed to deserialize config file");
+    // println!("{}", motors_conf.pretty());
 
-    println!("{}", motors_conf.pretty());
     let serial_port = serialport::new(serialport, baudrate)
         .timeout(Duration::from_millis(10))
         .open()?;
@@ -111,11 +111,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     while let Some(event) = events.recv() {
         match event {
             Event::Input { id, metadata, data } => match id.as_str() {
-                "mj_l_joints_pos" | "mj_r_joints_pos" => {
+                "mj_r_joints_pos" => {
                     let buffer: &dora_node_api::arrow::array::Float64Array =
                         data.as_any().downcast_ref().unwrap();
                     let buffer: &[f64] = buffer.values();
-                    // println!("data: {:?}", buffer);
+                    // if buffer.len()> 15 {
+                    //     println!("Received mj_r_joints_pos data: {:?}", buffer);
+                    // }
 
                     let mut motors_ids: Vec<u8> = Vec::new();
                     let mut motors_goalpos: Vec<f64> = Vec::new();
@@ -126,13 +128,13 @@ fn main() -> Result<(), Box<dyn Error>> {
                         if let Some(Parameter::ListInt(finger1_idx)) =
                             metadata.parameters.get(&finger.finger_name)
                         {
-                            println!(
-                                "metadata: name: {:?} idx {:?} data: {:?} {:?}",
-                                finger.finger_name,
-                                finger1_idx,
-                                buffer[finger1_idx[0] as usize],
-                                buffer[finger1_idx[1] as usize]
-                            );
+                            // println!(
+                            //     "metadata: name: {:?} idx {:?} data: {:?} {:?}",
+                            //     finger.finger_name,
+                            //     finger1_idx,
+                            //     buffer[finger1_idx[0] as usize],
+                            //     buffer[finger1_idx[1] as usize]
+                            // );
                             // controller.sync_write_goal_position(
                             //     &[finger.motor1.id, finger.motor2.id],
                             //     &[
@@ -155,16 +157,22 @@ fn main() -> Result<(), Box<dyn Error>> {
                             }
                             motors_goalpos.push(m2goal);
 
-                            // controller.write_goal_position(
-                            //     finger.motor1.id,
-                            //     buffer[finger1_idx[0] as usize] + finger.motor1.offset,
-                            // )?;
-                            // thread::sleep(Duration::from_millis(10));
-                            // controller.write_goal_position(
-                            //     finger.motor2.id,
-                            //     buffer[finger1_idx[1] as usize] + finger.motor2.offset,
-                            // )?;
-                            // thread::sleep(Duration::from_millis(10));
+                            // println!("writing goal positions... name: {:?} idx {:?} data: {:?} {:?}",
+                            //     finger.finger_name,
+                            //     finger1_idx,
+                            //     m1goal,
+                            //     m2goal
+                            // );
+                            controller.write_goal_position(
+                                finger.motor1.id,
+                                buffer[finger1_idx[0] as usize] + finger.motor1.offset,
+                            )?;
+                            thread::sleep(Duration::from_millis(10));
+                            controller.write_goal_position(
+                                finger.motor2.id,
+                                buffer[finger1_idx[1] as usize] + finger.motor2.offset,
+                            )?;
+                            thread::sleep(Duration::from_millis(10));
                         }
                     }
                     controller.sync_write_goal_position(&motors_ids, &motors_goalpos)?;

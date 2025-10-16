@@ -167,12 +167,8 @@ def process_img(hand_proc, image):
     return image,r_res,l_res
 # cv2.imshow('MediaPipe Hands', cv2.flip(image, 1))
 
-
 def main():
-
     node = Node()
-
-
     pa.array([])  # initialize pyarrow array
     cap = cv2.VideoCapture(0)
 
@@ -181,10 +177,7 @@ def main():
             min_detection_confidence=0.5,
             min_tracking_confidence=0.5) as hands:
 
-
-
         for event in node:
-
             event_type = event["type"]
 
             if event_type == "INPUT":
@@ -201,6 +194,7 @@ def main():
                     frame,r_res,l_res=process_img(hands,frame)
 
                     if r_res is not None:
+                        # print(f"Sending right hand data: {r_res}")
                         node.send_output('r_hand_pos',pa.array(r_res))
                     if l_res is not None:
                         node.send_output('l_hand_pos',pa.array(l_res))
@@ -209,10 +203,8 @@ def main():
                     if cv2.waitKey(1) & 0xFF == ord("q"):
                         break
 
-
             elif event_type == "ERROR":
                 raise RuntimeError(event["error"])
-
 
 if __name__ == "__main__":
     main()
