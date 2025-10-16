@@ -1,0 +1,7 @@
+**/dora-daemon.txt
+**/dora-coordinator.txt
+**/dependency_links.txt
+**/*.egg-info/
+**.lock
+target/
+out/
